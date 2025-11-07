@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero Analyzer Pro - Phân Tích Phản Hồi Chuyên Nghiệp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        /* Tông màu Đen - Xanh Lá (Hiện đại và tập trung) */
+        :root {
+            --primary-color: #1A2C5B;
+            --secondary-color: #ff6600;
+            --success-color: #00a878;
+            --danger-color: #e53e3e;
+            --light-bg: #f8f9fa;
+            --dark-bg: #1a1a1a;
+            --card-bg-light: #ffffff;
+            --card-bg-dark: #2d3748;
+            --sidebar-width: 250px;
+        }
+        
+        .btn-gemini-ai {
+            background-color: var(--primary-color) !important; 
+            border-color: var(--primary-color) !important;
+            color: white !important;
+            font-weight: 600;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .btn-gemini-ai:hover {
+            background-color: #152445 !important; 
+            border-color: #152445 !important;
+        }
+
+        .card-gemini-ai .card-header {
+            background-color: var(--secondary-color) !important;
+            color: white;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .card-gemini-ai .card-header h5 {
+            color: white;
+        }
+        .text-primary-color {
+            color: var(--primary-color) !important;
+        }
+
+        body { 
+            background-color: var(--light-bg); 
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        [data-bs-theme="dark"] { 
+            background-color: var(--dark-bg); 
+            color: #e2e8f0; 
+        }
+        [data-bs-theme="dark"] .card {
+            background-color: var(--card-bg-dark);
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        [data-bs-theme="dark"] .form-control {
+            background-color: #4a5568;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        [data-bs-theme="dark"] .form-select {
+            background-color: #4a5568;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        [data-bs-theme="dark"] .table {
+            color: #e2e8f0;
+        }
+        [data-bs-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) {
+            --bs-table-accent-bg: #1f2937;
+        }
+        
+        .navbar { 
+            background-color: var(--primary-color) !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,.1); 
+            z-index: 1040;
+        }
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .sidebar { 
+            background: var(--card-bg-light); 
+            height: 100vh; 
+            position: fixed; 
+            left: 0; 
+            top: 0; 
+            width: var(--sidebar-width); 
+            padding-top: 56px;
+            transition: transform 0.3s; 
+            z-index: 1030; 
+            border-right: 1px solid #e2e8f0;
+        }
+        [data-bs-theme="dark"] .sidebar { 
+            background: var(--card-bg-dark); 
+            border-right: 1px solid #4a5568;
+        }
+        
+        .nav-link { 
+            color: #4a5568 !important; 
+            padding: 10px 15px; 
+            border-radius: 6px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        [data-bs-theme="dark"] .nav-link { 
+            color: #e2e8f0 !important; 
+        }
+        .nav-link:hover { 
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+        .nav-link.active {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            font-weight: 600;
+        }
+        
+        .quick-actions-bar {
+            position: fixed;
+            top: 56px;
+            right: 0;
+            left: var(--sidebar-width); 
+            z-index: 1029;
+            padding: 10px 20px;
+            transition: left 0.3s;
+            background-color: var(--bs-body-bg); 
+            box-shadow: 0 2px 4px rgba(0,0,0,.05);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        [data-bs-theme="dark"] .quick-actions-bar { 
+             border-bottom: 1px solid #4a5568;
+        }
+        
+        .main-content { 
+            margin-left: var(--sidebar-width); 
+            padding: 130px 20px 20px 20px;
+            transition: margin-left 0.3s; 
+            min-height: 100vh; 
+        }
+        
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .main-content.expanded { margin-left: 0; } 
+        .quick-actions-bar.expanded { left: 0; }
+        
+        @media (max-width: 992px) { 
+            .sidebar { transform: translateX(-100%); } 
+            .main-content { margin-left: 0; padding-top: 130px; } 
+            .sidebar.show { transform: translateX(0); }
+            .quick-actions-bar { left: 0; }
+        }
+
+        .metric-card { 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            border: none;
+            background-color: var(--card-bg-light);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.05);
+        }
+        .metric-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 4px 12px rgba(0,0,0,.1); 
+        }
+        .metric-icon { 
+            padding: 10px; 
+            border-radius: 50%; 
+            margin-right: 15px; 
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .metric-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        [data-bs-theme="dark"] .metric-title {
+            color: #a0aec0;
+        }
+        
+        .metric-positive .metric-icon { background-color: var(--success-color); color: white; }
+        .metric-negative .metric-icon { background-color: var(--danger-color); color: white; }
+        .metric-neutral .metric-icon { background-color: var(--secondary-color); color: white; }
+        .metric-rating .metric-icon { background-color: var(--primary-color); color: white; }
+        
+        .report-card { 
+            cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            height: 100%;
+        }
+        .report-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,.1); 
+        }
+        .report-name-text {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .chart-container { 
+            min-height: 350px; 
+            height: 100%;
+            display: flex; 
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        .chart-container > div {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .loading-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(255,255,255,0.9); 
+            z-index: 9999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        [data-bs-theme="dark"] .loading-overlay { 
+            background: rgba(0,0,0,0.9); 
+        }
+        .spinner { 
+            width: 3rem; 
+            height: 3rem; 
+        }
+        .fade-in { 
+            animation: fadeIn 0.5s; 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+        
+        .dataTables_wrapper .row { 
+            margin-bottom: 1rem; 
+        }
+        .dataTables_wrapper .dataTables_filter input { 
+            border-radius: 4px; 
+            border: 1px solid #ced4da; 
+        }
+        .dataTables_wrapper .pagination .page-item.active .page-link { 
+            background-color: var(--primary-color); 
+            border-color: var(--primary-color); 
+        }
+        
+    </style>
+</head>
+<body data-bs-theme="light">
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="text-center">
+            <div class="spinner-border spinner text-primary-color" role="status"></div>
+            <p class="mt-3 text-primary-color">Đang xử lý dữ liệu... Vui lòng chờ</p>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <button class="btn text-white me-3 d-lg-none" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="navbar-brand me-auto" href="#"><i class="fas fa-chart-line me-2"></i>Zero Analyzer</a>
+            
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3 d-none d-md-inline">
+                    <i class="fas fa-user-circle me-1"></i> Xin chào, **{{ username }}**
+                </span>
+                
+                <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-light me-3" title="Đăng xuất">
+                     <i class="fas fa-sign-out-alt"></i>
+                </a>
+
+                <button class="btn btn-outline-light" id="themeToggle" onclick="toggleTheme()" title="Chuyển đổi Giao diện Sáng/Tối">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="quick-actions-bar">
+        <div class="d-flex justify-content-between align-items-center">
+             <div id="report-title-display" class="badge bg-secondary">Dữ liệu phân tích hiện tại</div>
+            <div class="d-flex">
+                 <button class="btn btn-primary me-2 custom-action-btn" onclick="showSection('analyze')">
+                    <i class="fas fa-plus me-1"></i> New Analysis
+                </button>
+                <button class="btn btn-secondary custom-action-btn" onclick="saveReportManual()" id="saveReportBtn" style="display:none;">
+                    <i class="fas fa-save me-1"></i> Save Report
+                </button>
+                 <button class="btn btn-outline-secondary custom-action-btn ms-2" onclick="exportPDF()" id="exportPdfBtn" style="display:none;">
+                    <i class="fas fa-file-pdf me-1"></i> Export PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="p-3">
+            <h6 class="text-muted mb-3">MENU CHÍNH</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link active" href="#" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('reports')"><i class="fas fa-file-alt me-2"></i>Reports</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('analyze')"><i class="fas fa-upload me-2"></i>Analyze Data</a></li>
+            </ul>
+            <hr class="my-3">
+            <h6 class="text-muted mb-3">CÔNG CỤ</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('load-data')"><i class="fas fa-table me-2"></i>Data Preview</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('train')"><i class="fas fa-cogs me-2"></i>Model Info</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="#" onclick="clearAllData()"><i class="fas fa-trash me-2"></i>Clear Dashboard</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        
+        <div id="dashboard" class="container-fluid fade-in">
+            <h2 class="mb-4"><i class="fas fa-tachometer-alt me-2 text-primary-color"></i>Tổng Quan Phân Tích</h2>
+            
+            <div class="row mb-5">
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card metric-card p-3 metric-positive">
+                        <div class="d-flex align-items-center">
+                            <div class="metric-icon"><i class="fas fa-thumbs-up"></i></div>
+                            <div>
+                                <div class="metric-title">Tỷ lệ Positive</div>
+                                <div class="metric-value" id="positiveMetric">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card metric-card p-3 metric-negative">
+                        <div class="d-flex align-items-center">
+                            <div class="metric-icon"><i class="fas fa-thumbs-down"></i></div>
+                            <div>
+                                <div class="metric-title">Tỷ lệ Negative</div>
+                                <div class="metric-value" id="negativeMetric">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card metric-card p-3 metric-neutral">
+                        <div class="d-flex align-items-center">
+                            <div class="metric-icon"><i class="fas fa-minus"></i></div>
+                            <div>
+                                <div class="metric-title">Tỷ lệ Neutral</div>
+                                <div class="metric-value" id="neutralMetric">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card metric-card p-3 metric-rating">
+                        <div class="d-flex align-items-center">
+                            <div class="metric-icon"><i class="fas fa-star"></i></div>
+                            <div>
+                                <div class="metric-title">Rating Trung bình (5.0)</div>
+                                <div class="metric-value" id="avgRatingMetric">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="analysis-results"> 
+                <h4 class="mb-3"><i class="fas fa-chart-pie me-2 text-primary-color"></i>Biểu Đồ Phân Tích</h4>
+                <div class="row" id="dashboardCharts">
+                    <div class="col-lg-6">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header">
+                                <h6 class="mb-0">Tỷ Lệ Cảm Xúc (Sentiment)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" id="pieChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header">
+                                <h6 class="mb-0">Phân Bố Rating (Histogram)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" id="histChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h4 class="mt-4 mb-3"><i class="fas fa-table me-2 text-primary-color"></i>Dữ Liệu Chi Tiết</h4>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <table id="dataTable" class="table table-striped" style="width:100%"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12 mt-4">
+                        <div class="card shadow-sm card-gemini-ai">
+                            <div class="card-header">
+                                <h5><i class="fas fa-brain me-2"></i>Phân Tích Topic & Đề Xuất</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted">Sử dụng AI để phân loại các chủ đề nổi bật trong dữ liệu và đưa ra 3 đề xuất ưu tiên.</p>
+                                <div class="mb-3">
+                                    <button class="btn btn-gemini-ai w-100" id="geminiAnalyzeBtn" onclick="analyzeTopicsWithGemini()">
+                                        <i class="fas fa-rocket me-2"></i>Phân Tích Topic & Đề Xuất
+                                    </button>
+                                </div>
+
+                                <div id="geminiResultArea" class="mt-4" style="display: none;">
+                                    <h6 class="mb-3 text-primary-color"><i class="fas fa-lightbulb me-2"></i>Kết Quả Phân Tích Topic và Đề Xuất</h6>
+                                    
+                                    <h6><i class="fas fa-tag me-1"></i> Các Topic Nổi bật:</h6>
+                                    <div id="geminiTopics" class="mb-3">
+                                        <span class="badge bg-secondary me-2">Chưa phân tích</span>
+                                    </div>
+                                    
+                                    <h6><i class="fas fa-check-circle me-1"></i> Đề xuất Ưu tiên:</h6>
+                                    <div id="geminiSuggestions" class="alert alert-success">
+                                        <ul id="suggestionList"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="reports" class="container-fluid" style="display: none;">
+            <h2 class="mb-4"><i class="fas fa-file-alt me-2 text-primary-color"></i>Báo Cáo Đã Lưu</h2>
+            <p id="reports-list-status" class="alert alert-info">Đang tải danh sách báo cáo...</p>
+            <div id="reports-list" class="row"></div>
+        </div>
+
+        <div id="analyze" class="container-fluid" style="display: none;">
+            <h2 class="mb-4"><i class="fas fa-upload me-2 text-primary-color"></i>Thực Hiện Phân Tích</h2>
+            <div class="row d-flex align-items-stretch"> 
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header"><h5><i class="fas fa-file-csv me-2"></i>Phân Tích Dữ Liệu File (CSV, Excel, DOCX)</h5></div>
+                        <div class="card-body d-flex flex-column"> 
+                            <p class="text-muted">Tải lên file dữ liệu phản hồi (.csv, .xlsx, .docx) để thực hiện phân tích tổng thể.</p>
+                            <div class="mb-3 mt-auto">
+                                <label for="analyzeFile" class="form-label">Chọn File CSV/Excel/DOCX</label>
+                                <input class="form-control" type="file" id="analyzeFile" accept=".csv, .xlsx, .xls, .docx"> <!-- ĐÃ SỬA -->
+                            </div>
+                            <button class="btn btn-primary w-100 mt-2" onclick="analyzeDataFile()">
+                                <i class="fas fa-search me-2"></i>Phân tích Dữ liệu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                         <div class="card-header"><h5><i class="fas fa-comment-dots me-2"></i>Phân Tích Văn Bản Đơn lẻ</h5></div>
+                         <div class="card-body d-flex flex-column"> 
+                            <p class="text-muted">Nhập một đoạn văn bản ngắn để kiểm tra nhanh cảm xúc và rating.</p>
+                            <textarea id="analyzeText" class="form-control mb-3 flex-grow-1" rows="3" placeholder="Nhập văn bản để phân tích..."></textarea>
+                            
+                            <!-- ✅ ĐÃ THÊM DIV HIỂN THỊ KẾT QUẢ -->
+                            <div id="analyzeResult" class="alert alert-info mt-3" style="display: none;"></div>
+                            
+                            <button class="btn btn-secondary w-100 mt-2" onclick="analyzeSingleText()">
+                                <i class="fas fa-comment-dots me-2"></i>Phân tích Văn bản
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="load-data" class="container-fluid" style="display: none;">
+            <h2 class="mb-4"><i class="fas fa-table me-2 text-primary-color"></i>
+                Xem Trước Dữ Liệu</h2>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header"><h5><i class="fas fa-upload me-2"></i>Tải lên để Xem trước (CSV, Excel, DOCX)</h5></div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="previewFile" class="form-label">Chọn File CSV/Excel/DOCX</label>
+                        <input class="form-control" type="file" id="previewFile" accept=".csv, .xlsx, .xls, .docx"> <!-- ĐÃ SỬA -->
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="previewDataFile()">
+                        <i class="fas fa-eye me-2"></i>Xem trước Dữ liệu
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h6 id="preview-info">Chưa có file nào được tải lên.</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="previewTable" class="table table-striped table-hover" style="width:100%"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="train" class="container-fluid" style="display: none;">
+            <h2 class="mb-4"><i class="fas fa-cogs me-2 text-primary-color"></i>Thông Tin Mô Hình AI</h2>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header"><h5><i class="fas fa-info-circle me-2"></i>Trạng thái Mô hình</h5></div>
+                        <div class="card-body">
+                            <p class="alert alert-info">Chức năng huấn luyện mô hình **chỉ là thông báo**. Việc huấn luyện mô hình (`train_script.py`) cần được thực hiện thủ công trên máy chủ để đảm bảo tính ổn định và bảo mật.</p>
+                            <button class="btn btn-primary" onclick="trainModelApi()">
+                                <i class="fas fa-bell me-2"></i>Kiểm tra trạng thái Mô hình
+                            </button>
+                            <p id="trainStatus" class="mt-3 text-muted">Vui lòng chạy `train_script.py` để huấn luyện mô hình mới.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const { jsPDF } = window.jspdf;
+        
+        // --- GLOBAL STATE ---
+        let globalChartData = { metrics: {}, table_data: [], sentiments: [], ratings: [] }; 
+        let dataTable = null; 
+        let previewDataTable = null; 
+
+        // --- HÀM HỖ TRỢ CHUNG ---
+        function getSentimentColor(sentiment) {
+            if (sentiment === 'positive') return 'bg-success';
+            if (sentiment === 'negative') return 'bg-danger';
+            return 'bg-warning';
+        }
+        
+        function getReportColor(index) {
+            const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'];
+            return colors[index % colors.length];
+        }
+
+        function toggleSidebar() { 
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const quickActionsBar = document.querySelector('.quick-actions-bar');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+            quickActionsBar.classList.toggle('expanded'); 
+            if (window.innerWidth <= 992) {
+                 sidebar.classList.toggle('show');
+            }
+        }
+
+        function toggleTheme() { 
+             const body = document.body;
+             const currentTheme = body.getAttribute('data-bs-theme');
+             const icon = document.querySelector('#themeToggle i');
+             if (currentTheme === 'light') {
+                 body.setAttribute('data-bs-theme', 'dark');
+                 icon.className = 'fas fa-sun';
+             } else {
+                 body.setAttribute('data-bs-theme', 'light');
+                 icon.className = 'fas fa-moon';
+             }
+             drawPieChart();
+             drawRatingHistogram();
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.container-fluid').forEach(section => {
+                if (section.id && ['dashboard', 'reports', 'analyze', 'load-data', 'train'].includes(section.id)) {
+                    section.style.display = 'none';
+                    section.classList.remove('fade-in');
+                }
+            });
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = 'block';
+                section.classList.add('fade-in');
+            }
+            
+            const activeLink = document.querySelector(`.sidebar .nav-link[onclick="showSection('${sectionId}')"]`);
+            if (activeLink) {
+                 activeLink.classList.add('active');
+            }
+            
+            const saveBtn = document.getElementById('saveReportBtn');
+            const exportBtn = document.getElementById('exportPdfBtn');
+
+            const isDataPresent = globalChartData.sentiments.length > 0;
+            if (sectionId === 'dashboard' && isDataPresent) {
+                 saveBtn.style.display = 'block';
+                 exportBtn.style.display = 'block';
+            } else {
+                 saveBtn.style.display = 'none';
+                 exportBtn.style.display = 'none';
+            }
+            
+            if (sectionId === 'reports') {
+                loadReportsList();
+            }
+        }
+        
+        function clearAllData() { 
+            Swal.fire({
+                title: 'Xác nhận xóa dữ liệu?',
+                text: "Thao tác này sẽ chỉ xóa dữ liệu phân tích hiện tại trên Dashboard, không ảnh hưởng đến Reports đã lưu.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    globalChartData = { metrics: {}, table_data: [], sentiments: [], ratings: [] };
+                    
+                    updateDashboard({ positive_rate: 0, negative_rate: 0, neutral_rate: 0, avg_rating: 0 }, [], [], [], 'Chưa có dữ liệu phân tích');
+                    if (dataTable) dataTable.clear().draw();
+                    document.getElementById('saveReportBtn').style.display = 'none';
+                    document.getElementById('exportPdfBtn').style.display = 'none';
+                    Plotly.purge('pieChart');
+                    Plotly.purge('histChart');
+                    document.getElementById('geminiResultArea').style.display = 'none';
+                    document.getElementById('geminiTopics').innerHTML = '<span class="badge bg-secondary me-2">Chưa phân tích</span>';
+                    document.getElementById('suggestionList').innerHTML = '';
+
+                    Swal.fire('Đã xóa!', 'Dữ liệu trên Dashboard đã được xóa.', 'success');
+                }
+            });
+        }
+        
+        function trainModelApi() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            fetch('/api/check_model_status', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    document.getElementById('trainStatus').innerText = data.message;
+                    Swal.fire('Thông báo', data.message, data.status === 'success' ? 'success' : 'info');
+                })
+                .catch(error => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    document.getElementById('trainStatus').innerText = 'Lỗi kết nối server.';
+                    Swal.fire('Lỗi', 'Không thể kết nối đến server để kiểm tra model.', 'error');
+                });
+        }
+
+
+        // --- CẬP NHẬT DASHBOARD & BIỂU ĐỒ ---
+        function updateDashboard(metrics, tableData, sentiments, ratings, title = 'Chưa có dữ liệu phân tích') {
+            document.getElementById('positiveMetric').innerText = `${metrics.positive_rate}%`;
+            document.getElementById('negativeMetric').innerText = `${metrics.negative_rate}%`;
+            document.getElementById('neutralMetric').innerText = `${metrics.neutral_rate}%`;
+            document.getElementById('avgRatingMetric').innerText = parseFloat(metrics.avg_rating).toFixed(2); 
+            document.getElementById('report-title-display').innerText = title;
+            
+            globalChartData.metrics = metrics;
+            globalChartData.table_data = tableData;
+            globalChartData.sentiments = sentiments || [];
+            globalChartData.ratings = ratings || [];
+
+            drawPieChart();
+            drawRatingHistogram();
+
+             if (dataTable) {
+                 dataTable.destroy();
+             }
+             
+             dataTable = $('#dataTable').DataTable({
+                 data: tableData || [],
+                 columns: [
+                     { data: 'id', title: 'ID' },
+                     { data: 'feedback_text', title: 'Văn bản Phản hồi', width: '45%' },
+                     { 
+                         data: 'sentiment', 
+                         title: 'Sentiment',
+                         render: function(data) {
+                             const color = getSentimentColor(data);
+                             return `<span class="badge ${color}">${data ? data.toUpperCase() : 'N/A'}</span>`;
+                         }
+                     },
+                     { data: 'rating', title: 'Rating' },
+                     { 
+                         data: 'topic',
+                         title: 'Topic',
+                         render: function(data) {
+                              if (!data || data === 'Chưa phân loại') {
+                                 return `<span class="badge bg-secondary">Chưa phân loại</span>`;
+                              }
+                              const hash = data.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                              const color = getReportColor(hash);
+                              return `<span class="badge text-white" style="background-color: ${color};">${data}</span>`;
+                         }
+                     }
+                 ],
+                 responsive: true,
+                 pageLength: 10,
+                 destroy: true,
+                 order: [[0, 'asc']]
+             });
+            
+            const isDataPresent = sentiments.length > 0;
+            document.getElementById('saveReportBtn').style.display = isDataPresent ? 'block' : 'none';
+            document.getElementById('exportPdfBtn').style.display = isDataPresent ? 'block' : 'none';
+            
+            showSection('dashboard');
+        }
+
+        function drawPieChart() {
+            const chartDiv = document.getElementById('pieChart');
+            if (globalChartData.sentiments.length === 0) {
+                 Plotly.purge(chartDiv);
+                 return;
+            }
+            const sentimentCounts = globalChartData.sentiments.reduce((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc; }, {});
+            
+            const labels = Object.keys(sentimentCounts);
+            const values = Object.values(sentimentCounts);
+
+            const colors = labels.map(label => {
+                if (label === 'positive') return '#00a878';
+                if (label === 'negative') return '#e53e3e';
+                return '#ff6600';
+            });
+
+            const data = [{
+                values: values,
+                labels: labels,
+                type: 'pie',
+                marker: { colors: colors },
+                hoverinfo: 'label+percent+value',
+                textinfo: 'percent',
+                automargin: true,
+                insidetextfont: { size: 14 },
+                outsidetextfont: { size: 12 },
+            }];
+
+            const isDarkMode = document.body.getAttribute('data-bs-theme') === 'dark';
+            const paperBg = isDarkMode ? 'var(--card-bg-dark)' : 'var(--card-bg-light)';
+            const fontColor = isDarkMode ? '#e2e8f0' : '#4a5568';
+            
+            const layout = {
+                height: null, 
+                margin: {t: 20, b: 20, l: 0, r: 0},
+                showlegend: true,
+                paper_bgcolor: paperBg, 
+                plot_bgcolor: paperBg,
+                font: { color: fontColor },
+                uniformtext: { mode: 'hide', minsize: 12 },
+                autosize: true 
+            };
+            
+            Plotly.newPlot(chartDiv, data, layout, {
+                responsive: true,
+                displayModeBar: false
+            });
+            
+            Plotly.Plots.resize(chartDiv);
+        }
+
+        function drawRatingHistogram() {
+             const chartDiv = document.getElementById('histChart');
+             if (globalChartData.ratings.length === 0) {
+                 Plotly.purge(chartDiv);
+                 return;
+            }
+            
+            const data = [{
+                x: globalChartData.ratings,
+                type: 'histogram', 
+                xbins: {
+                    start: 0.5,
+                    end: 5.5,
+                    size: 1
+                },
+                marker: { color: '#007bff' } 
+            }];
+
+            const isDarkMode = document.body.getAttribute('data-bs-theme') === 'dark';
+            const paperBg = isDarkMode ? 'var(--card-bg-dark)' : 'var(--card-bg-light)';
+            const fontColor = isDarkMode ? '#e2e8f0' : '#4a5568';
+
+            const layout = {
+                title: '',
+                height: null, 
+                bargap: 0.15,
+                xaxis: { 
+                    title: 'Rating (1.0 - 5.0)', 
+                    range: [0.5, 5.5], 
+                    dtick: 1,           
+                    tickmode: 'linear',
+                    tick0: 1,            
+                    showgrid: false,
+                }, 
+                yaxis: { 
+                    title: 'Số lượng Phản hồi',
+                    rangemode: 'tozero',
+                },
+                margin: {t: 20, b: 60, l: 60, r: 20},
+                paper_bgcolor: paperBg,
+                plot_bgcolor: paperBg,
+                autosize: true,
+            };
+            
+            if (isDarkMode) {
+                 layout.font = { color: fontColor };
+                 layout.xaxis.gridcolor = 'rgba(255, 255, 255, 0.1)';
+                 layout.yaxis.gridcolor = 'rgba(255, 255, 255, 0.1)';
+            }
+
+            Plotly.newPlot(chartDiv, data, layout, {responsive: true, displayModeBar: false});
+            Plotly.Plots.resize(chartDiv); 
+        }
+
+        // --- API CHÍNH (Phân tích) ---
+        
+        function analyzeDataFile() {
+             const fileInput = document.getElementById('analyzeFile');
+             const file = fileInput.files[0];
+
+             if (!file) {
+                 Swal.fire('Lỗi', 'Vui lòng chọn file CSV, Excel hoặc DOCX để phân tích.', 'warning');
+                 return;
+             }
+
+             const formData = new FormData();
+             formData.append('file', file);
+             formData.append('text_column', 'Văn bản phản hồi'); 
+             
+             document.getElementById('loadingOverlay').style.display = 'flex';
+
+             fetch('/api/analyze_file', {
+                 method: 'POST',
+                 body: formData
+             })
+             .then(response => response.json())
+             .then(data => {
+                 document.getElementById('loadingOverlay').style.display = 'none';
+                 if (data.status === 'success') {
+                     const tableDataWithTopic = data.table_data.map(item => ({
+                         ...item,
+                         topic: item.topic || 'Chưa phân loại'
+                     }));
+                     
+                     updateDashboard(data.metrics, tableDataWithTopic, data.sentiments, data.ratings, file.name);
+                     
+                     document.getElementById('geminiResultArea').style.display = 'none';
+                     document.getElementById('geminiTopics').innerHTML = '<span class="badge bg-secondary me-2">Chưa phân tích</span>';
+                     document.getElementById('suggestionList').innerHTML = '';
+                     
+                     Swal.fire('Thành công!', 'Phân tích file hoàn tất. Chuyển sang Dashboard để xem kết quả.', 'success');
+                 } else {
+                     Swal.fire('Lỗi Phân Tích', data.error, 'error');
+                 }
+             })
+             .catch(error => {
+                 document.getElementById('loadingOverlay').style.display = 'none';
+                 Swal.fire('Lỗi kết nối', 'Không thể kết nối đến server.', 'error');
+                 console.error('Lỗi:', error);
+             });
+        }
+        
+        function analyzeSingleText() {
+             const text = document.getElementById('analyzeText').value.trim();
+             if (!text) {
+                 Swal.fire('Lỗi', 'Vui lòng nhập văn bản để phân tích.', 'warning');
+                 return;
+             }
+             
+             document.getElementById('loadingOverlay').style.display = 'flex';
+             const resultDiv = document.getElementById('analyzeResult');
+             resultDiv.innerHTML = '';
+             resultDiv.style.display = 'none';
+
+             fetch('/api/analyze_text', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ text: text })
+             })
+             .then(response => response.json())
+             .then(data => {
+                 document.getElementById('loadingOverlay').style.display = 'none';
+                 
+                 if (data.status === 'success') {
+                     const sentiment = data.sentiment.toUpperCase();
+                     const rating = data.rating.toFixed(1);
+                     const color = getSentimentColor(data.sentiment);
+
+                     resultDiv.innerHTML = `
+                         <p class="mb-1">Sentiment: <span class="badge ${color}">${sentiment}</span></p>
+                         <p class="mb-0">Rating (1-5): <strong>${rating}</strong></p>
+                     `;
+                     resultDiv.style.display = 'block';
+                 } else {
+                     Swal.fire('Lỗi Phân Tích', data.error, 'error');
+                 }
+             })
+             .catch(error => {
+                 document.getElementById('loadingOverlay').style.display = 'none';
+                 Swal.fire('Lỗi kết nối', 'Không thể kết nối đến server.', 'error');
+                 console.error('Lỗi:', error);
+             });
+        }
+        
+        // --- ✅ HÀM GEMINI AI ĐÃ TỐI ƯU ---
+        
+        function analyzeTopicsWithGemini() {
+            // 1. Kiểm tra dữ liệu
+            if (globalChartData.table_data.length === 0) {
+                Swal.fire('Lỗi', 'Vui lòng phân tích một file dữ liệu trước.', 'warning');
+                return;
+            }
+
+            // 2. Chuẩn bị dữ liệu (giảm xuống 50 feedback)
+            const dataToSend = globalChartData.table_data
+                .filter(row => row.feedback_text && row.feedback_text.trim().length > 10)
+                .sort((a, b) => b.feedback_text.length - a.feedback_text.length)
+                .slice(0, 100)  // ✅ Giảm từ 100 xuống 50
+                .map(row => ({ 
+                    id: row.id, 
+                    text: row.feedback_text.substring(0, 150) // ✅ Giới hạn 150 ký tự
+                }));
+
+            if (dataToSend.length === 0) {
+                Swal.fire('Lỗi', 'Không tìm thấy phản hồi hợp lệ.', 'warning');
+                return;
+            }
+
+            // 3. Hiển thị loading
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('geminiResultArea').style.display = 'none';
+
+            // 4. Gửi request
+            fetch('/api/gemini_full_analysis', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ feedbacks: dataToSend })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                
+                if (data.status === 'success') {
+                    updateTableTopics(data.result.classified_feedbacks);
+                    displayGeminiResults(data.result);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: `Đã phân tích ${dataToSend.length} feedback.`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire('Lỗi Gemini', data.message || 'Lỗi không xác định.', 'error');
+                }
+            })
+            .catch(error => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                console.error('Gemini API Error:', error);
+                Swal.fire('Lỗi kết nối', 'Không thể kết nối đến API Gemini. Vui lòng thử lại.', 'error');
+            });
+        }
+
+        function updateTableTopics(classifiedFeedbacks) {
+            const topicMap = classifiedFeedbacks.reduce((acc, item) => {
+                acc[item.id] = item.topic;
+                return acc;
+            }, {});
+
+            // ✅ THÊM LOGIC: Thống kê các topic phổ biến nhất
+            const topicCounts = {};
+            classifiedFeedbacks.forEach(item => {
+                topicCounts[item.topic] = (topicCounts[item.topic] || 0) + 1;
+            });
+            
+            // Sắp xếp theo số lượng giảm dần
+            const sortedTopics = Object.entries(topicCounts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([topic]) => topic);
+            
+            // Topic phổ biến nhất
+            const mostCommonTopic = sortedTopics[0] || 'Khác/Chung chung';
+
+            // ✅ CẬP NHẬT: Gán topic cho feedback đã phân tích, các feedback còn lại gán topic phổ biến nhất
+            globalChartData.table_data = globalChartData.table_data.map(row => {
+                const newTopic = topicMap[row.id];
+                if (newTopic) {
+                    row.topic = newTopic; // Feedback đã được Gemini phân tích
+                } else if (row.topic === 'Chưa phân loại') {
+                    // ✅ Feedback chưa được phân tích → gán topic phổ biến nhất (hoặc dựa vào sentiment)
+                    if (row.sentiment === 'negative') {
+                        row.topic = 'Sản phẩm/Chất lượng'; // Giả định negative thường về sản phẩm
+                    } else if (row.sentiment === 'positive') {
+                        row.topic = mostCommonTopic; // Dùng topic phổ biến nhất
+                    } else {
+                        row.topic = 'Khác/Chung chung'; // Neutral
+                    }
+                }
+                return row;
+            });
+
+            if (dataTable) {
+                 dataTable.clear().rows.add(globalChartData.table_data).draw();
+            }
+        }
+
+        function displayGeminiResults(result) {
+            const topicsDiv = document.getElementById('geminiTopics');
+            const suggestionList = document.getElementById('suggestionList');
+            
+            topicsDiv.innerHTML = '';
+            if (result.topics && result.topics.length > 0) {
+                result.topics.forEach((topic) => {
+                    const hash = topic.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                    const color = getReportColor(hash); 
+                    topicsDiv.innerHTML += `<span class="badge me-2 mb-1 text-white" style="background-color: ${color};">${topic}</span>`;
+                });
+            } else {
+                topicsDiv.innerHTML = `<span class="badge bg-secondary me-2">Không tìm thấy Topic nổi bật</span>`;
+            }
+
+            suggestionList.innerHTML = '';
+            if (result.suggestions && result.suggestions.length > 0) {
+                 result.suggestions.forEach(suggestion => {
+                    suggestionList.innerHTML += `<li>${suggestion}</li>`;
+                });
+            } else {
+                suggestionList.innerHTML = `<li>Không có đề xuất nào được đưa ra.</li>`;
+            }
+
+            document.getElementById('geminiResultArea').style.display = 'block';
+        }
+        
+        
+        // --- REPORTS & XUẤT FILE ---
+        
+        function loadReportsList() {
+            const reportsListDiv = document.getElementById('reports-list');
+            const statusDiv = document.getElementById('reports-list-status');
+            statusDiv.innerText = 'Đang tải danh sách báo cáo...';
+            reportsListDiv.innerHTML = ''; 
+
+            fetch('/api/reports')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.reports.length > 0) {
+                        statusDiv.style.display = 'none';
+                        data.reports.forEach((report, index) => {
+                            const date = new Date(report.timestamp);
+                            const formattedDate = date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
+                            const color = getReportColor(index);
+                            
+                            const cardHtml = `
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card shadow-sm report-card" style="border-left-color: ${color};">
+                                        <div class="card-body">
+                                            <h5 class="card-title report-name-text" style="color: ${color};">${report.name}</h5>
+                                            <p class="card-text text-muted mb-1"><i class="fas fa-clock me-1"></i> ${formattedDate}</p>
+                                            <p class="card-text text-muted mb-3"><i class="fas fa-chart-bar me-1"></i> ${report.metrics.count} phản hồi</p>
+                                            <div class="d-flex justify-content-between">
+                                                <button class="btn btn-sm btn-primary" onclick="loadReportDetails('${report.id}', '${report.name.replace(/'/g, "\\'")}')"><i class="fas fa-eye me-1"></i> Xem</button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteReport('${report.id}')"><i class="fas fa-trash me-1"></i> Xóa</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            reportsListDiv.innerHTML += cardHtml;
+                        });
+                    } else {
+                        statusDiv.style.display = 'block';
+                        statusDiv.className = 'alert alert-warning';
+                        statusDiv.innerText = 'Chưa có báo cáo nào được lưu.';
+                    }
+                })
+                .catch(error => {
+                    statusDiv.style.display = 'block';
+                    statusDiv.className = 'alert alert-danger';
+                    statusDiv.innerText = 'Lỗi kết nối server: Không thể tải danh sách báo cáo.';
+                    console.error('Lỗi Reports:', error);
+                });
+        }
+
+        function loadReportDetails(reportId, reportName) {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            fetch(`/api/report/${reportId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    if (data.status === 'success') {
+                        const tableDataWithTopic = data.table_data.map(item => ({
+                             ...item,
+                             topic: item.topic || 'Chưa phân loại' 
+                        }));
+                        
+                        updateDashboard(data.metrics, tableDataWithTopic, data.sentiments, data.ratings, `${reportName} (Đã tải)`);
+                        
+                        if (data.gemini_result) {
+                            displayGeminiResults(data.gemini_result);
+                        } else {
+                            document.getElementById('geminiResultArea').style.display = 'none';
+                            document.getElementById('geminiTopics').innerHTML = '<span class="badge bg-secondary me-2">Chưa phân tích</span>';
+                            document.getElementById('suggestionList').innerHTML = '';
+                        }
+                        
+                        Swal.fire('Thành công!', `Đã tải báo cáo "${reportName}" lên Dashboard.`, 'success');
+                    } else {
+                        Swal.fire('Lỗi', data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    Swal.fire('Lỗi kết nối', 'Không thể tải chi tiết báo cáo.', 'error');
+                    console.error('Lỗi Reports Detail:', error);
+                });
+        }
+        
+        function deleteReport(reportId) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa báo cáo này? Thao tác này không thể hoàn tác.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/report/${reportId}`, { method: 'DELETE' })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                Swal.fire('Đã xóa!', 'Báo cáo đã được xóa thành công.', 'success');
+                                loadReportsList();
+                            } else {
+                                Swal.fire('Lỗi', data.error, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire('Lỗi kết nối', 'Không thể xóa báo cáo.', 'error');
+                            console.error('Lỗi Delete Report:', error);
+                        });
+                }
+            });
+        }
+
+        function saveReportManual() {
+            if (globalChartData.sentiments.length === 0) {
+                 Swal.fire('Lỗi', 'Không có dữ liệu trên Dashboard để lưu.', 'warning');
+                 return;
+            }
+            
+            Swal.fire({
+                title: 'Lưu Báo Cáo',
+                input: 'text',
+                inputLabel: 'Nhập tên báo cáo:',
+                inputValue: document.getElementById('report-title-display').innerText.replace(' (Đã tải)', '') || `Report_${new Date().toISOString().slice(0, 10)}`,
+                showCancelButton: true,
+                confirmButtonText: 'Lưu',
+                cancelButtonText: 'Hủy',
+                showLoaderOnConfirm: true,
+                preConfirm: (reportName) => {
+                    if (!reportName || reportName.trim() === '') {
+                        Swal.showValidationMessage('Vui lòng nhập tên báo cáo.');
+                        return false;
+                    }
+                    
+                    const geminiResultArea = document.getElementById('geminiResultArea');
+                    let geminiData = null;
+                    if (geminiResultArea.style.display !== 'none') {
+                        const topics = Array.from(document.querySelectorAll('#geminiTopics .badge')).map(el => el.innerText);
+                        const suggestions = Array.from(document.querySelectorAll('#suggestionList li')).map(el => el.innerText);
+                        geminiData = { topics, suggestions, classified_feedbacks: globalChartData.table_data.map(r => ({id: r.id, topic: r.topic})) };
+                    }
+
+                    const dataToSave = {
+                        name: reportName,
+                        metrics: globalChartData.metrics,
+                        table_data: globalChartData.table_data,
+                        sentiments: globalChartData.sentiments,
+                        ratings: globalChartData.ratings,
+                        gemini_result: geminiData
+                    };
+
+                    return fetch('/api/save_report', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dataToSave)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(`Lỗi: ${error}`);
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value.status === 'success') {
+                    Swal.fire('Đã lưu!', `Báo cáo "${result.value.report_name}" đã được lưu thành công.`, 'success');
+                } else if (result.isConfirmed) {
+                     Swal.fire('Lỗi Lưu', result.value.error || 'Lỗi không xác định khi lưu báo cáo.', 'error');
+                }
+            });
+        }
+        
+        // ✅ HÀM EXPORT PDF ĐÃ TỐI ƯU
+        function exportPDF() {
+            if (globalChartData.sentiments.length === 0) {
+                 Swal.fire('Lỗi', 'Không có dữ liệu trên Dashboard để xuất PDF.', 'warning');
+                 return;
+            }
+
+            const element = document.getElementById('dashboard'); 
+            const reportTitle = document.getElementById('report-title-display').innerText.replace('Dữ liệu phân tích hiện tại', 'Report').trim();
+            const filename = `${reportTitle.replace(/\s/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+            document.getElementById('loadingOverlay').style.display = 'flex';
+
+            html2canvas(element, { 
+                scale: 4, 
+                useCORS: true, 
+                allowTaint: true, 
+                scrollY: 0, 
+                windowWidth: document.documentElement.offsetWidth, 
+                windowHeight: document.documentElement.offsetHeight,
+                ignoreElements: (element) => {
+                    return element.id === 'loadingOverlay'; 
+                }
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
+                
+                const pdfWidth = 210; 
+                const pdfHeight = 297; 
+                
+                const imgWidth = pdfWidth - 20; 
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                let position = 10; 
+
+                if (imgHeight > (pdfHeight - 20)) { 
+                    let heightLeft = imgHeight;
+                    let pageNum = 1;
+                    
+                    const ratio = canvas.width / imgWidth; 
+                    
+                    while (heightLeft > 0) {
+                        if (pageNum > 1) {
+                            pdf.addPage();
+                            position = 10;
+                        }
+                        
+                        let heightToCut = pdfHeight - 20; 
+                        let sourceHeight = heightToCut * ratio; 
+                        
+                        const sY = (pageNum - 1) * heightToCut * ratio;
+                        
+                        if (heightLeft < heightToCut) {
+                            sourceHeight = heightLeft * ratio;
+                        }
+
+                        const newCanvas = document.createElement('canvas');
+                        newCanvas.width = canvas.width;
+                        newCanvas.height = sourceHeight;
+                        
+                        const ctx = newCanvas.getContext('2d');
+                        ctx.drawImage(canvas, 0, sY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
+                        
+                        const slicedImgData = newCanvas.toDataURL('image/jpeg', 1.0); 
+
+                        pdf.addImage(slicedImgData, 'JPEG', 10, position, imgWidth, Math.min(heightToCut, heightLeft));
+
+                        heightLeft -= heightToCut;
+                        pageNum++;
+                    }
+
+                } else {
+                     pdf.addImage(imgData, 'JPEG', 10, position, imgWidth, imgHeight);
+                }
+
+                pdf.save(filename);
+                document.getElementById('loadingOverlay').style.display = 'none';
+                Swal.fire('Thành công', `Đã xuất báo cáo thành công: ${filename}`, 'success');
+                
+            }).catch(error => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                console.error("Lỗi xuất PDF:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi Xuất File',
+                    text: 'Không thể tạo file PDF. Vui lòng kiểm tra console để biết chi tiết lỗi kỹ thuật.',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+        
+        // Xem trước dữ liệu
+        function previewDataFile() {
+             const fileInput = document.getElementById('previewFile');
+             const file = fileInput.files[0];
+
+             if (!file) {
+                 Swal.fire('Lỗi', 'Vui lòng chọn file CSV, Excel hoặc DOCX để xem trước.', 'warning');
+                 return;
+             }
+
+             const formData = new FormData();
+             formData.append('file', file);
+             
+             document.getElementById('loadingOverlay').style.display = 'flex';
+
+             fetch('/api/preview_file', {
+                 method: 'POST',
+                 body: formData
+             })
+             .then(response => response.json())
+             .then(data => {
+                 document.getElementById('loadingOverlay').style.display = 'none';
+                 if (data.status === 'success') {
+                     document.getElementById('preview-info').innerText = `Xem trước 10 dòng đầu tiên của file: ${file.name}`;
+                     
+                     if (previewDataTable) {
+                         previewDataTable.destroy();
+                     }
+                     
+                     const columns = Object.keys(data.data[0]).map(col => ({ title: col, data: col }));
+
+                     previewDataTable = $('#previewTable').DataTable({
+                         data: data.data,
+                         columns: columns,
+                         responsive: true,
+                         pageLength: 10,
+                         destroy: true,
+                         searching: false,
+                         paging: false,
+                         info: false
+                     });
+                     
+                     Swal.fire('Thành công!', 'Đã tải dữ liệu xem trước.', 'success');
+                 } else {
+                     Swal.fire('Lỗi Đọc File', data.error, 'error');
+                 }
+             })
+             .catch(error => {
+                 document.getElementById('loadingOverlay').style.display = 'none';
+                 Swal.fire('Lỗi kết nối', 'Không thể kết nối đến server.', 'error');
+                 console.error('Lỗi Preview:', error);
+             });
+        }
+
+
+        // Khởi tạo Dashboard khi tải trang
+        $(document).ready(function() {
+            showSection('dashboard');
+            dataTable = $('#dataTable').DataTable({
+                 columns: [
+                     { title: 'ID', data: 'id' },
+                     { title: 'Văn bản Phản hồi', data: 'feedback_text' },
+                     { title: 'Sentiment', data: 'sentiment' },
+                     { title: 'Rating', data: 'rating' },
+                     { title: 'Topic', data: 'topic' }
+                 ],
+                 responsive: true,
+                 pageLength: 10,
+                 searching: true,
+                 paging: true,
+                 info: true
+             });
+        });
+    </script>
+</body>
+</html>
