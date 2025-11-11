@@ -1,43 +1,52 @@
-# Feedlytics: AI Customer Feedback Intelligence Platform 🇻🇳
+# Feedlytics: AI-Powered Customer Feedback Intelligence Platform (Vietnam)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![Framework: Flask](https://img.shields.io/badge/Framework-Flask-black.svg)](https://flask.palletsprojects.com/)
-[![Model: PhoBERT & Gemini AI](https://img.shields.io/badge/Models-PhoBERT%2FGemini%20AI-red.svg)]()
+[![Models: PhoBERT & Gemini AI](https://img.shields.io/badge/Models-PhoBERT%20%7C%20Gemini%20AI-red.svg)]()
 
-Dự án Feedlytics là một hệ thống phân tích phản hồi khách hàng tự động (Customer Feedback Analysis System) sử dụng các mô hình Ngôn ngữ Lớn (LLM) và Học Sâu (Deep Learning) để xử lý văn bản tiếng Việt từ các nền tảng Thương mại Điện tử. Mục tiêu là chuyển đổi dữ liệu phản hồi thô thành các **Actionable Insights** (Thông tin hành động được) về Sentiment (Cảm xúc) và Topic (Chủ đề).
+**Feedlytics** is a sophisticated *Customer Feedback Intelligence Platform* designed for automated analysis of Vietnamese e-commerce reviews. By integrating **Large Language Models (LLMs)** and **Deep Learning**, the system efficiently converts unstructured textual feedback into **actionable business intelligence**, delivering high-fidelity **sentiment classification** and **topic modeling** to support strategic decision-making.
 
-## ✨ Tính năng nổi bật
+---
 
-* **Sentiment Classification (PhoBERT):** Phân loại cảm xúc (Positive/Negative/Neutral) với độ chính xác **93.4\%** bằng cách Fine-tuning mô hình PhoBERT trên tập dữ liệu E-commerce 20.000 mẫu.
-* **Topic Modeling (Gemini AI):** Tự động phân loại 6 chủ đề chính (ví dụ: Chất lượng sản phẩm, Giao hàng/Logistics, Dịch vụ khách hàng) và sinh ra **3 đề xuất cải tiến cụ thể**.
-* **Web Application:** Giao diện người dùng thân thiện (Flask + Bootstrap 5), hỗ trợ xử lý hàng loạt file **CSV/Excel/DOCX**.
-* **Performance:** Xử lý 1000 mẫu phản hồi trong khoảng **12.5 giây** (trên GPU RTX 3060).
+## Key Features
 
-## 🚀 Cấu trúc dự án
+| **Component** | **Technical Description** |
+|---------------|----------------------------|
+| **Sentiment Classification (PhoBERT)** | Fine-tuned `vinai/phobert-base` on a 20,000-sample e-commerce corpus, achieving **93.4% accuracy** in ternary classification (Positive / Negative / Neutral). |
+| **Topic Modeling & Actionable Recommendations (Gemini AI)** | Employs **Gemini-Flash** with few-shot prompting for automated classification into **6 primary domains** (e.g., Product Quality, Logistics, Customer Service) and generation of **three targeted improvement strategies**. |
+| **Multi-Format Batch Processing** | Supports seamless ingestion of **CSV, Excel (.xlsx), and DOCX** files via a user-centric web interface (Flask + Bootstrap 5). |
+| **High-Performance Inference** | Processes **1,000 feedback instances in approximately 12.5 seconds** using GPU acceleration (NVIDIA RTX 3060). |
+| **Interactive Analytics Dashboard** | Real-time visualization powered by **Plotly.js**, including sentiment distribution, rating histograms, topic prevalence, and searchable data tables. |
 
-| File/Thư mục | Mô tả |
-| :--- | :--- |
-| `app.py` | Core Flask application: định tuyến (routing), logic nghiệp vụ, quản lý phiên và xử lý request. |
-| `train_phobert.py` | Script dùng để **Fine-tune** mô hình PhoBERT trên tập dữ liệu tiếng Việt. |
-| `train_script.py` | Script tiền xử lý dữ liệu và chuẩn bị môi trường cho việc đào tạo/chạy mô hình. |
-| `test_phobert.py` | Script đánh giá hiệu suất (Accuracy, F1-score) của mô hình PhoBERT đã huấn luyện. |
-| `train.csv` | Tập dữ liệu mẫu (hoặc tập huấn luyện 20.000 samples) được sử dụng trong nghiên cứu. |
-| `feedback_reports.db` | Cơ sở dữ liệu SQLite (Lưu trữ tài khoản người dùng, báo cáo đã lưu). |
-| `README.md` | File mô tả dự án. |
+---
 
-## ⚙️ Hướng dẫn cài đặt và triển khai
+## System Architecture
 
-### 1. Yêu cầu môi trường
+![System Architecture](kientruchethong.png)
 
-* Python 3.10+
-* GPU NVIDIA (khuyến nghị cho PhoBERT inference/training)
-* CUDA Toolkit 11.8+
+> **Extended 3-Tier Architecture with Dedicated AI Layer**  
+> - **Frontend Layer**: Responsive interface using Bootstrap 5, Plotly.js, and DataTables  
+> - **Backend Layer**: Flask-based RESTful services, session management, and secure file parsing  
+> - **AI Layer**: PhoBERT for sentiment inference; Gemini AI for topic classification and recommendation synthesis; PyTorch for GPU-accelerated execution  
+> - **Persistence Layer**: SQLite for user authentication and report archival
+---
+## Installation & Deployment
+1. System Requirements
+s
+Python: 3.10 or later
+GPU: NVIDIA (recommended for PhoBERT inference and training)
+CUDA Toolkit: 11.8 or compatible
 
-### 2. Cài đặt Dependencies
+2. Dependency Installation
+bashpip install -r requirements.txt
+Key dependencies include: torch, transformers, flask, pandas, google-generativeai, openpyxl, python-docx, plotly, scikit-learn
+3. Launch Application
+bashpython app.py
+---
 
-Tạo và kích hoạt môi trường ảo, sau đó cài đặt các thư viện cần thiết:
-
-```bash
-pip install -r requirements.txt 
-# (requirements.txt chứa các gói như: torch, transformers, flask, pandas, google-genai, openpyxl, python-docx, ... )
+<p align="center">
+  <strong>By: Nguyễn Thị Mai Hương</strong><br>
+  Information Technology, Đại Nam University, Vietnam<br>
+  Email: <a href="mailto:HuongMaiNg@example.com">3sevenm@gmail.com</a>
+</p>
