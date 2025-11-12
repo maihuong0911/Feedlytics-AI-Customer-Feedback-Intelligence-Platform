@@ -1,5 +1,5 @@
 <h2 align="center">
-# 🧠 Feedlytics: AI-Powered Customer Feedback Intelligence Platform (Vietnam)
+    🧠 Feedlytics: AI-Powered Customer Feedback Intelligence Platform (Vietnam)
 </h2>
 
 <div align="center">
