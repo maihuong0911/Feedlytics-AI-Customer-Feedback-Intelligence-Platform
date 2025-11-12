@@ -1,18 +1,24 @@
 <h2 align="center">
-    <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin">
+  <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin" target="_blank">
     🎓 Faculty of Information Technology (DaiNam University)
-    </a>
+  </a>
 </h2>
+
 <h2 align="center">
-   ỨNG DỤNG PHÂN TÍCH CẢM XÚC TỪ PHẢN HỒI SINH VIÊN TRÊN FACEBOOK
+  ỨNG DỤNG PHÂN TÍCH CẢM XÚC TỪ PHẢN HỒI SINH VIÊN TRÊN FACEBOOK
 </h2>
+
 <div align="center">
-    <p align="center">
-        <img src="images/dnu_logo.png" alt="AIoTLab Logo" width="170"/>
-        <img src="images/aiotlab_logo.png" alt="AIoTLab Logo" width="180"/>
-        <img src="images/dnu_logo.png" alt="DaiNam University Logo" width="200"/>
-    </p>
-# Feedlytics: AI-Powered Customer Feedback Intelligence Platform (Vietnam)
+  <p>
+    <img src="images/dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
+    <img src="images/aiotlab_logo.png" alt="AIoTLab Logo" width="180" style="margin: 0 20px;"/>
+    <img src="images/dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
+  </p>
+</div>
+
+---
+
+# 🧠 Feedlytics: AI-Powered Customer Feedback Intelligence Platform (Vietnam)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
@@ -23,7 +29,7 @@
 
 ---
 
-## Key Features
+## ⚙️ Key Features
 
 | **Component** | **Technical Description** |
 |---------------|----------------------------|
@@ -35,32 +41,27 @@
 
 ---
 
-## System Architecture
+## 🧩 System Architecture
 
-![System Architecture](kientruchethong.png)
+<p align="center">
+  <img src="kientruchethong.png" alt="System Architecture" width="600"/>
+</p>
 
 > **Extended 3-Tier Architecture with Dedicated AI Layer**  
 > - **Frontend Layer**: Responsive interface using Bootstrap 5, Plotly.js, and DataTables  
 > - **Backend Layer**: Flask-based RESTful services, session management, and secure file parsing  
 > - **AI Layer**: PhoBERT for sentiment inference; Gemini AI for topic classification and recommendation synthesis; PyTorch for GPU-accelerated execution  
-> - **Persistence Layer**: SQLite for user authentication and report archival
----
-## Installation & Deployment
-1. System Requirements
-s
-Python: 3.10 or later
-GPU: NVIDIA (recommended for PhoBERT inference and training)
-CUDA Toolkit: 11.8 or compatible
+> - **Persistence Layer**: SQLite for user authentication and report archival  
 
-2. Dependency Installation
-bashpip install -r requirements.txt
-Key dependencies include: torch, transformers, flask, pandas, google-generativeai, openpyxl, python-docx, plotly, scikit-learn
-3. Launch Application
-bashpython app.py
 ---
 
-<p align="center">
-  <strong>By: Nguyễn Thị Mai Hương</strong><br>
-  Information Technology, Đại Nam University, Vietnam<br>
-  Email: <a href="mailto:HuongMaiNg@example.com">3sevenm@gmail.com</a>
-</p>
+## 🚀 Installation & Deployment
+
+### 1️⃣ System Requirements
+- Python: 3.10 or later  
+- GPU: NVIDIA (recommended for PhoBERT inference and training)  
+- CUDA Toolkit: 11.8 or compatible  
+
+### 2️⃣ Dependency Installation
+```bash
+pip install -r requirements.txt
