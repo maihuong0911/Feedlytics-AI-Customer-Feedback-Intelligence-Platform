@@ -1,24 +1,31 @@
 <h2 align="center">
-  <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin" target="_blank">
-    🎓 Faculty of Information Technology (DaiNam University)
-  </a>
-</h2>
-
-<h2 align="center">
-  ỨNG DỤNG PHÂN TÍCH CẢM XÚC TỪ PHẢN HỒI SINH VIÊN TRÊN FACEBOOK
+# 🧠 Feedlytics: AI-Powered Customer Feedback Intelligence Platform (Vietnam)
 </h2>
 
 <div align="center">
-  <p>
-    <img src="dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
-    <img src="aiotlab_logo.png" alt="AIoTLab Logo" width="180" style="margin: 0 20px;"/>
-    <img src="dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
-  </p>
+    <p align="center">
+        <img width="200" alt="dnu_logo" src="https://github.com/user-attachments/assets/2bcb1a6c-774c-4e7d-b14d-8c53dbb4067f" />
+        <img width="180" alt="fitdnu_logo" src="https://github.com/user-attachments/assets/ec4815af-e477-480b-b9fa-c490b74772b8" />
+        <img width="170" alt="aiotlab_logo" src="https://github.com/user-attachments/assets/41ef702b-3d6e-4ac4-beac-d8c9a874bca9" />
+    </p>
+
+<p align="center">
+  <a href="https://dainam.edu.vn">
+    <img alt="DaiNam University"
+         src="https://img.shields.io/badge/DaiNam_University-ff6b35?style=flat-square">
+  </a>
+  <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin">
+    <img alt="Faculty of IT"
+         src="https://img.shields.io/badge/Faculty_of_IT-0066cc?style=flat-square">
+  </a>
+  <a href="https://www.facebook.com/DNUAIoTLab">
+    <img alt="AIoTLab"
+         src="https://img.shields.io/badge/AIoTLab-28a745?style=flat-square&logo=facebook&logoColor=white">
+  </a>
+</p>
 </div>
 
 ---
-
-# 🧠 Feedlytics: AI-Powered Customer Feedback Intelligence Platform (Vietnam)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
