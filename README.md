@@ -10,9 +10,9 @@
 
 <div align="center">
   <p>
-    <img src="images/dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
-    <img src="images/aiotlab_logo.png" alt="AIoTLab Logo" width="180" style="margin: 0 20px;"/>
-    <img src="images/dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
+    <img src="dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
+    <img src="aiotlab_logo.png" alt="AIoTLab Logo" width="180" style="margin: 0 20px;"/>
+    <img src="dnu_logo.png" alt="DaiNam University Logo" width="160" style="margin: 0 20px;"/>
   </p>
 </div>
 
